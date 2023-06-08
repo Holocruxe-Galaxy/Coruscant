@@ -7,7 +7,7 @@ const loginUser = async (req, res) => {
     user
       ? res.status(200).send(user)
       : res
-          .status(201)
+          .status(500)
           .send(
             "El correo con el que está queriendo iniciar sesión no existe, por favor registrese"
           );

@@ -26,15 +26,15 @@ const createUser = async (req, res) => {
       !image_profile_url ||
       !birthdate
     ) {
-      res.status(201).send("Verifique si falta la información de algún campo");
+      res.status(500).send("Verifique si falta la información de algún campo");
     } else {
       !created
         ? res
-            .status(201)
+            .status(409)
             .send(
               "El correo electrónico ya está asociado a una cuenta, intente iniciar sesión"
             )
-        : res.status(200).send("El usuario fué creado correctamente");
+        : res.status(201).send("El usuario fué creado correctamente");
     }
   } catch (error) {
     console.log(error);
