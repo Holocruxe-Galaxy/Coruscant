@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import dotenv from 'dotenv';
+import { UsersModule } from './users/users.module';
+import * as dotenv from 'dotenv';
 dotenv.config();
 const { DB_HOST, DB_USER, DB_NAME, DB_PASSWORD } = process.env;
-
+console.log(DB_HOST);
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -18,8 +17,9 @@ const { DB_HOST, DB_USER, DB_NAME, DB_PASSWORD } = process.env;
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    UsersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
