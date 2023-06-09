@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import * as dotenv from 'dotenv';
 import { ConfigModule } from '@nestjs/config';
-/* import dotenv from 'dotenv';
-dotenv.config(); */
-const { DB_HOST, DB_USER, DB_NAME, DB_PASSWORD, PRODUCTION } = process.env;
+dotenv.config();
+const { DB_HOST, DB_USER, DB_NAME, DB_PASSWORD } = process.env;
+console.log(DB_HOST);
 
 @Module({
   imports: [
@@ -23,7 +22,7 @@ const { DB_HOST, DB_USER, DB_NAME, DB_PASSWORD, PRODUCTION } = process.env;
     }),
     UsersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
