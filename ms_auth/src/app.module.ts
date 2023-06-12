@@ -1,25 +1,24 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
-import * as dotenv from 'dotenv';
 import { ConfigModule } from '@nestjs/config';
-dotenv.config();
-const { DB_HOST, DB_USER, DB_NAME, DB_PASSWORD, PRODUCTION } = process.env;
-console.log(DB_HOST);
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
-      logging: !Boolean(PRODUCTION),
+      logging: !Boolean(process.env.PRODUCTION),
       type: 'postgres',
-      host: DB_HOST,
+      host: process.env.DB_HOST,
       port: 5432,
-      username: DB_USER,
-      password: DB_PASSWORD,
-      database: DB_NAME,
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: !Boolean(PRODUCTION),
+      synchronize: !Boolean(process.env.PRODUCTION),
     }),
     UsersModule,
   ],
