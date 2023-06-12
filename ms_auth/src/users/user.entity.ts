@@ -5,7 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
+// import { AplicationData } from './interfaces/aplication-data.interface';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
@@ -28,10 +28,17 @@ export class User {
   ban: boolean;
   @Column({ default: false })
   premium: boolean;
-  @CreateDateColumn()
+  @Column({
+    name: 'created_at',
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'now()',
+  })
   createdAt: Date;
   @UpdateDateColumn()
   updatedAt: Date;
   @Column({ nullable: true })
   last_connection: Date;
+  // @Column('json')
+  // aplication_data: AplicationData;
 }
