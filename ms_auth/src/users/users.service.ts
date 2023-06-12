@@ -28,7 +28,7 @@ export class UsersService {
 
     const newUser = await this.userRepository.create(user);
     this.userRepository.save(newUser);
-    return newUser;
+    return 'user created successfully';
   }
 
   async sigIn(user: SigInUserDto) {
@@ -43,6 +43,6 @@ export class UsersService {
     }
     const alreadySigin = { ...already, last_connection: new Date() };
     await this.userRepository.save(alreadySigin);
-    return already;
+    return alreadySigin;
   }
 }
