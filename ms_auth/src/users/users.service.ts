@@ -41,6 +41,8 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    const alreadySigin = { ...already, last_connection: new Date() };
+    await this.userRepository.save(alreadySigin);
     return already;
   }
 }

@@ -16,11 +16,15 @@ export class User {
   name: string;
   @Column({ nullable: false })
   lastname: string;
-  @Column({ nullable: true })
+  @Column({
+    default:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7rknxUtwx7q1VXuXZdNEGKaUJ6gFodh-rcw&usqp=CAU',
+    nullable: true,
+  })
   image_profile_url: string;
   @Column({ nullable: false, unique: true })
   email: string;
-  @Column({ nullable: false })
+  @Column({ type: 'date', nullable: false })
   birthdate: Date;
   @Column({ default: false })
   admin: boolean;
