@@ -28,7 +28,12 @@ export class User {
   ban: boolean;
   @Column({ default: false })
   premium: boolean;
-  @CreateDateColumn()
+  @Column({
+    name: 'created_at',
+    type: 'timestamp',
+    nullable: false,
+    default: () => 'now()',
+  })
   createdAt: Date;
   @UpdateDateColumn()
   updatedAt: Date;
