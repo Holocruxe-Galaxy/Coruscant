@@ -28,14 +28,14 @@ export class UsersService {
     return 'user created successfully';
   }
 
-  async sigIn(user: SigInUserDto) {
+  async logIn(user: SigInUserDto) {
     const already = await this.userRepository.findOne({
       where: { email: user.email },
     });
     if (!already) {
       return new HttpException(
         'the account you are trying to access does not exist, please register',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.NOT_FOUND,
       );
     }
     const alreadySigin = { ...already, last_connection: new Date() };

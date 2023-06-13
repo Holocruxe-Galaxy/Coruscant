@@ -23,18 +23,18 @@ export class UsersController {
     }
     res.status(HttpStatus.CREATED).send(newUser);
   }
-  @Post('sigin')
-  async sigIn(@Res() res: Response, @Body() user: SigInUserDto) {
+  @Post('login')
+  async logIn(@Res() res: Response, @Body() user: SigInUserDto) {
     const errors = await validate(plainToClass(SigInUserDto, user));
 
     if (errors.length > 0) {
       res.status(HttpStatus.BAD_REQUEST).send(errors);
     }
-    const sigIn = await this.userService.sigIn(user);
+    const signIn = await this.userService.logIn(user);
 
-    if (sigIn['status'] === 400) {
-      res.status(HttpStatus.BAD_REQUEST).send(sigIn);
+    if (signIn['status'] === 404) {
+      res.status(HttpStatus.NOT_FOUND).send(signIn);
     }
-    res.status(HttpStatus.ACCEPTED).send(sigIn);
+    res.status(HttpStatus.ACCEPTED).send(signIn);
   }
 }
