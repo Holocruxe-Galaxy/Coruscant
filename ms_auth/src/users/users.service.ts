@@ -4,16 +4,13 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/user-create.dto';
 import { SigInUserDto } from './dto/user-sig-in.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
-
-  getUsers(): Promise<User[]> {
-    return this.userRepository.find();
-  }
 
   async createUser(user: CreateUserDto) {
     const already_user = await this.userRepository.findOne({
