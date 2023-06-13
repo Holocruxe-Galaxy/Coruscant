@@ -18,7 +18,7 @@ export class UsersController {
       res.status(HttpStatus.BAD_REQUEST).send(errors);
     }
     const newUser = await this.userService.createUser(user);
-    if (newUser['status'] == 409) {
+    if (newUser['status'] === 409) {
       res.status(HttpStatus.CONFLICT).send(newUser);
     }
     res.status(HttpStatus.CREATED).send(newUser);
@@ -32,7 +32,7 @@ export class UsersController {
     }
     const sigIn = await this.userService.sigIn(user);
 
-    if (sigIn['status'] == 400) {
+    if (sigIn['status'] === 400) {
       res.status(HttpStatus.BAD_REQUEST).send(sigIn);
     }
     res.status(HttpStatus.ACCEPTED).send(sigIn);
