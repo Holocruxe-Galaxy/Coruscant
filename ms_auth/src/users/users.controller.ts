@@ -15,26 +15,26 @@ export class UsersController {
     const errors = await validate(plainToClass(CreateUserDto, user));
 
     if (errors.length > 0) {
-      res.status(HttpStatus.BAD_REQUEST).send(errors);
+      return res.status(HttpStatus.BAD_REQUEST).send(errors);
     }
     const newUser = await this.userService.createUser(user);
     if (newUser['status'] === 409) {
-      res.status(HttpStatus.CONFLICT).send(newUser);
+      return res.status(HttpStatus.CONFLICT).send(newUser);
     }
-    res.status(HttpStatus.CREATED).send(newUser);
+    return res.status(HttpStatus.CREATED).send(newUser);
   }
   @Post('login')
   async logIn(@Res() res: Response, @Body() user: SigInUserDto) {
     const errors = await validate(plainToClass(SigInUserDto, user));
 
     if (errors.length > 0) {
-      res.status(HttpStatus.BAD_REQUEST).send(errors);
+      return res.status(HttpStatus.BAD_REQUEST).send(errors);
     }
     const signIn = await this.userService.logIn(user);
 
     if (signIn['status'] === 404) {
-      res.status(HttpStatus.NOT_FOUND).send(signIn);
+      return res.status(HttpStatus.NOT_FOUND).send(signIn);
     }
-    res.status(HttpStatus.ACCEPTED).send(signIn);
+    return res.status(HttpStatus.ACCEPTED).send(signIn);
   }
 }
