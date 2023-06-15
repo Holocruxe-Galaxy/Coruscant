@@ -24,8 +24,8 @@ export class UsersService {
     }
 
     const newUser = await this.userRepository.create(user);
-    this.userRepository.save(newUser);
-    return 'user created successfully';
+    await this.userRepository.save(newUser);
+    return newUser;
   }
 
   async logIn(user: SigInUserDto) {

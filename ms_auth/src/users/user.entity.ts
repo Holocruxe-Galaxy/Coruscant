@@ -24,8 +24,6 @@ export class User {
   image_profile_url: string;
   @Column({ nullable: false, unique: true })
   email: string;
-  @Column({ type: 'date', nullable: false })
-  birthdate: Date;
   @Column({ default: false })
   admin: boolean;
   @Column({ default: false })
