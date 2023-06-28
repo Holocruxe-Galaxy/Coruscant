@@ -5,6 +5,7 @@ import {
   Post,
   Res,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/user-create.dto';
@@ -58,9 +59,9 @@ export class UsersController {
       const token = headers.authorization.split(' ')[1];
       const verify = await this.userService.verify(token);
 
-      return res.status(verify['status']).send(verify);
+      return res.status(HttpStatus.ACCEPTED).json({ userMail: verify });
     } catch (error) {
-      throw error;
+      throw new HttpException(error.response, error.status);
     }
   }
 }

@@ -59,11 +59,13 @@ export class UsersService {
           where: { email: decoded.email },
         });
         if (user) {
-          return new HttpException('User Authorized', HttpStatus.NO_CONTENT);
+          return decoded.email;
         }
-        throw new HttpException('User non Authorized', HttpStatus.UNAUTHORIZED);
       } else {
-        throw new HttpException('Non authorized token', HttpStatus.FORBIDDEN);
+        throw new HttpException(
+          `Non authorized token. Error:${_error.message}`,
+          HttpStatus.FORBIDDEN,
+        );
       }
     });
   }
