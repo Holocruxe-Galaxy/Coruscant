@@ -25,9 +25,9 @@ export class UsersService {
     const newUser = await this.userRepository.create(user);
     const userDb = await this.userRepository.save(newUser);
     const token = jwt.sign({ ...userDb }, this.JWT_SECRET, {
-      expiresIn: '1h',
+      expiresIn: '24h',
     });
-    return token;
+    return { userDb, token };
   }
 
   async logIn(user: SigInUserDto) {
@@ -48,8 +48,8 @@ export class UsersService {
     }
     const alreadySigin = { ...already, last_connection: new Date() };
     await this.userRepository.save(alreadySigin);
-    const token = jwt.sign(alreadySigin, this.JWT_SECRET, { expiresIn: '1h' });
-    return token;
+    const token = jwt.sign(alreadySigin, this.JWT_SECRET, { expiresIn: '24h' });
+    return { alreadySigin, token };
   }
 
   async verify(token: string) {

@@ -25,14 +25,13 @@ export class UsersController {
       return res.status(HttpStatus.BAD_REQUEST).send(errors);
     }
     const newUser = await this.userService.createUser(user);
-    console.log('newUser', newUser);
     if (newUser['status'] === 409) {
       return res.status(HttpStatus.CONFLICT).send(newUser);
     }
     return res
       .status(HttpStatus.CREATED)
-      .header({ Authorization: newUser })
-      .send('User created');
+      .header({ Authorization: newUser['token'] })
+      .send(newUser['userDb']);
   }
   @Post('login')
   async logIn(@Res() res: Response, @Body() user: SigInUserDto) {
@@ -49,8 +48,8 @@ export class UsersController {
     }
     return res
       .status(HttpStatus.ACCEPTED)
-      .header({ Authorization: signIn })
-      .send('you have successfully logged in');
+      .header({ Authorization: signIn['token'] })
+      .send(signIn['alreadySigin']);
   }
   @Post('verify')
   async verify(@Res() res: Response, @Headers() headers: any) {
