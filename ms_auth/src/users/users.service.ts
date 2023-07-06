@@ -69,4 +69,31 @@ export class UsersService {
       }
     });
   }
+
+  /**
+   * This section must be changed in the future
+   * cause we must change our form to manage user roles
+   * @param token
+   *
+   * If user is admin, the method returns a true
+   * @returns `true`
+   *
+   * If user is not admin, the method return a false
+   * @returns `false`
+   *
+   * If user is Banned, returns an error
+   * @throws {response: `User is banned`, status: 403}
+   */
+  async roleVerification(token: string) {
+    return jwt.verify(token, this.JWT_SECRET, async (_error, decoded: User) => {
+      if (decoded !== undefined) {
+        if (decoded.ban)
+          throw new HttpException(
+            `User ${decoded.username} is banned`,
+            HttpStatus.FORBIDDEN,
+          );
+        return decoded.admin;
+      }
+    });
+  }
 }
