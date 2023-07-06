@@ -67,17 +67,11 @@ export class UsersController {
   @Get('permissions')
   async accesPermisions(@Res() res: Response, @Headers() headers: any) {
     try {
-      const token = headers.authorization.split('')[1];
-      const roleVerification = this.userService.roleVerification(token);
-      if (roleVerification) {
-        return res
-          .status(HttpStatus.ACCEPTED)
-          .json({ status: 'success', messaje: 'The user is admin' });
-      }
-      return res.status(HttpStatus.UNAUTHORIZED).json({
-        status: 'Unauthorized',
-        messaje: "You don't have the access permisions",
-      });
+      const token = headers.authorization.split(' ')[1];
+      await this.userService.roleVerification(token);
+      return res
+        .status(HttpStatus.ACCEPTED)
+        .json({ status: 'success', messaje: 'The user is admin' });
     } catch (error) {
       throw new HttpException(error.response, error.status);
     }
