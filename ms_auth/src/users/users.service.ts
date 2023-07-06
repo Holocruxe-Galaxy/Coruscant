@@ -95,9 +95,16 @@ export class UsersService {
             `User ${user.username} is banned`,
             HttpStatus.FORBIDDEN,
           );
-        return user.admin;
+        if (!user.admin) {
+          throw new HttpException(
+            `User ${user.username} is not admin`,
+            HttpStatus.UNAUTHORIZED,
+          );
+        }
+        return true;
+      } else {
+        throw new HttpException('Non authorized token', HttpStatus.BAD_REQUEST);
       }
-      throw new HttpException('Non authorized token', HttpStatus.BAD_REQUEST);
     });
   }
 }
