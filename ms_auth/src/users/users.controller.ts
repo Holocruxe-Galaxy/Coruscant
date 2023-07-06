@@ -6,6 +6,7 @@ import {
   Res,
   HttpStatus,
   HttpException,
+  Get,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/user-create.dto';
@@ -59,6 +60,24 @@ export class UsersController {
       const verify = await this.userService.verify(token);
 
       return res.status(HttpStatus.ACCEPTED).json({ userMail: verify });
+    } catch (error) {
+      throw new HttpException(error.response, error.status);
+    }
+  }
+  @Get('permissions')
+  async accesPermisions(@Res() res: Response, @Headers() headers: any) {
+    try {
+      const token = headers.authorization.split('')[1];
+      const roleVerification = this.userService.roleVerification(token);
+      if (roleVerification) {
+        return res
+          .status(HttpStatus.ACCEPTED)
+          .json({ status: 'success', messaje: 'The user is admin' });
+      }
+      return res.status(HttpStatus.UNAUTHORIZED).json({
+        status: 'Unauthorized',
+        messaje: "You don't have the access permisions",
+      });
     } catch (error) {
       throw new HttpException(error.response, error.status);
     }
