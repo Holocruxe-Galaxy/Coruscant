@@ -87,13 +87,17 @@ export class UsersService {
   async roleVerification(token: string) {
     return jwt.verify(token, this.JWT_SECRET, async (_error, decoded: User) => {
       if (decoded !== undefined) {
-        if (decoded.ban)
+        const user = await this.userRepository.findOne({
+          where: { id: decoded.id },
+        });
+        if (user.ban)
           throw new HttpException(
-            `User ${decoded.username} is banned`,
+            `User ${user.username} is banned`,
             HttpStatus.FORBIDDEN,
           );
-        return decoded.admin;
+        return user.admin;
       }
+      throw new HttpException('Non authorized token', HttpStatus.BAD_REQUEST);
     });
   }
 }
