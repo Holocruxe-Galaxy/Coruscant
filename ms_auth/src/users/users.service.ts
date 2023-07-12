@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -62,9 +67,8 @@ export class UsersService {
           return decoded.email;
         }
       } else {
-        throw new HttpException(
+        throw new UnauthorizedException(
           `Non authorized token. Error:${_error.message}`,
-          HttpStatus.FORBIDDEN,
         );
       }
     });
