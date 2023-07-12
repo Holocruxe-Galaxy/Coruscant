@@ -53,12 +53,11 @@ export class UsersController {
       .header({ Authorization: signIn['token'] })
       .send(signIn['alreadySigin']);
   }
-  @Post('verify')
+  @Get('verify')
   async verify(@Res() res: Response, @Headers() headers: any) {
     try {
       const token = headers.authorization.split(' ')[1];
       const verify = await this.userService.verify(token);
-
       return res.status(HttpStatus.ACCEPTED).json({ userMail: verify });
     } catch (error) {
       throw new HttpException(error.response, error.status);
