@@ -56,6 +56,12 @@ export class UsersController {
   @Get('verify')
   async verify(@Res() res: Response, @Headers() headers: any) {
     try {
+      if (!headers.authorization) {
+        throw new HttpException('Token needed', HttpStatus.BAD_REQUEST);
+      }
+      if (headers.authorization.split(' ')[0] != 'Bearer') {
+        throw new HttpException('Wrong method', HttpStatus.NOT_ACCEPTABLE);
+      }
       const token = headers.authorization.split(' ')[1];
       const verify = await this.userService.verify(token);
       return res.status(HttpStatus.ACCEPTED).json({ userMail: verify });
