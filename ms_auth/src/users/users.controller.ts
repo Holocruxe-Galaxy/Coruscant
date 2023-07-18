@@ -72,6 +72,12 @@ export class UsersController {
   @Get('permissions')
   async accesPermisions(@Res() res: Response, @Headers() headers: any) {
     try {
+      if (!headers.authorization) {
+        throw new HttpException('Token needed', HttpStatus.BAD_REQUEST);
+      }
+      if (headers.authorization.split(' ')[0] != 'Bearer') {
+        throw new HttpException('Wrong method', HttpStatus.NOT_ACCEPTABLE);
+      }
       const token = headers.authorization.split(' ')[1];
       await this.userService.roleVerification(token);
       return res
