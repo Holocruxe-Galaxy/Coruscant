@@ -1,4 +1,4 @@
-name: Deploy
+ name: Deploy
 
 # Controls when the action will run. 
 on:
@@ -32,4 +32,3 @@ jobs:
             npm run build
             pm2 delete all 
             pm2 start dist/main.js
-            
