@@ -27,7 +27,7 @@ jobs:
             git pull origin main
             export NVM_DIR=~/.nvm
             export PATH=$PATH:/home/user/.npm-global/bin
-            source ~/.nvm/nvm.sh
+            source ~/.nvm/nvm.sh 
             npm install
             npm run build
             pm2 delete all 
