@@ -64,11 +64,12 @@ export class UsersController {
       }
       const token = headers.authorization.split(' ')[1];
       const verify = await this.userService.verify(token);
-      return res.status(HttpStatus.ACCEPTED).json({ userMail: verify });
+      return res.status(HttpStatus.ACCEPTED).json({ id: verify });
     } catch (error) {
       throw new HttpException(error.response, error.status);
     }
   }
+
   @Get('permissions')
   async accesPermisions(@Res() res: Response, @Headers() headers: any) {
     try {

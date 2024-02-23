@@ -27,9 +27,9 @@ export class UsersService {
         HttpStatus.CONFLICT,
       );
     }
-    const newUser = await this.userRepository.create(user);
+    const newUser = this.userRepository.create(user);
     const userDb = await this.userRepository.save(newUser);
-    const token = jwt.sign({ ...userDb }, this.JWT_SECRET, {
+    const token = jwt.sign({ id: userDb.id }, this.JWT_SECRET, {
       expiresIn: '24h',
     });
     return { userDb, token };
@@ -53,7 +53,9 @@ export class UsersService {
     }
     const alreadySigin = { ...already, last_connection: new Date() };
     await this.userRepository.save(alreadySigin);
-    const token = jwt.sign(alreadySigin, this.JWT_SECRET, { expiresIn: '24h' });
+    const token = jwt.sign({ id: alreadySigin.id }, this.JWT_SECRET, {
+      expiresIn: '24h',
+    });
     return { alreadySigin, token };
   }
 
@@ -61,10 +63,11 @@ export class UsersService {
     return jwt.verify(token, this.JWT_SECRET, async (_error, decoded: User) => {
       if (decoded !== undefined) {
         const user = await this.userRepository.findOne({
-          where: { email: decoded.email },
+          where: { id: decoded.id },
         });
+
         if (user) {
-          return decoded.email;
+          return user.id;
         }
       } else {
         throw new UnauthorizedException(

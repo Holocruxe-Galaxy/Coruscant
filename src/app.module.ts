@@ -4,6 +4,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { OnboardingModule } from './onboarding/onboarding.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AppService } from './app.service';
       synchronize: !Boolean(process.env.PRODUCTION),
     }),
     UsersModule,
+    OnboardingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
