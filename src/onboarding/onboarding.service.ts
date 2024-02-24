@@ -87,6 +87,14 @@ export class OnboardingService {
     let user = await this.userRepository.findOne({
       where: { id: decodedToken.id },
     });
+    if (!audio) {
+      user = {
+        ...user,
+        voiceLegacy: 'omitted',
+      };
+      await this.userRepository.save(user);
+      return 'The account was modified correctly';
+    }
     if (user) {
       const imageName = await this.uploadService.uploadManager(audio, user.id);
       user = {
@@ -100,6 +108,62 @@ export class OnboardingService {
         'The account was not found',
         HttpStatus.NOT_FOUND,
       );
+    }
+  }
+
+  async getStep(token: string) {
+    let decodedToken: { [x: string]: any; id?: any };
+    try {
+      decodedToken = jwt.verify(token, this.JWT_SECRET) as {
+        [key: string]: any;
+      };
+    } catch (error) {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+    }
+    let user = await this.userRepository.findOne({
+      where: { id: decodedToken.id },
+    });
+
+    if (!user.fullName && !user.birthDate && !user.country) {
+      console.log(user.hobbiesAndPreferences);
+      return {
+        status: 'PENDING',
+        step: 1,
+      };
+    }
+    if (
+      user.fullName &&
+      user.birthDate &&
+      user.country &&
+      !user.hobbiesAndPreferences
+    ) {
+      return {
+        status: 'PENDING',
+        step: 2,
+      };
+    }
+    if (
+      user.fullName &&
+      user.birthDate &&
+      user.country &&
+      user.hobbiesAndPreferences &&
+      !user.voiceLegacy
+    ) {
+      return {
+        status: 'PENDING',
+        step: 3,
+      };
+    }
+    if (
+      user.fullName &&
+      user.birthDate &&
+      user.country &&
+      user.hobbiesAndPreferences &&
+      user.voiceLegacy
+    ) {
+      return {
+        status: 'COMPLETE',
+      };
     }
   }
 }

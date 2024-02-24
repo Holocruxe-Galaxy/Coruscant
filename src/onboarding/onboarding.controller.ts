@@ -7,6 +7,7 @@ import {
   HttpStatus,
   UseInterceptors,
   UploadedFile,
+  Get,
 } from '@nestjs/common';
 import { OnboardingService } from './onboarding.service';
 import {
@@ -19,6 +20,19 @@ import { FileInterceptor } from '@nestjs/platform-express';
 @Controller('onboarding')
 export class OnboardingController {
   constructor(private readonly onboardingService: OnboardingService) {}
+
+  @Get('step')
+  getStatus(@Headers() headers: any) {
+    if (!headers.authorization) {
+      throw new HttpException('Token needed', HttpStatus.BAD_REQUEST);
+    }
+    if (headers.authorization.split(' ')[0] != 'Bearer') {
+      throw new HttpException('Wrong method', HttpStatus.NOT_ACCEPTABLE);
+    }
+    const token = headers.authorization.split(' ')[1];
+
+    return this.onboardingService.getStep(token);
+  }
 
   @Patch('one')
   stepOne(
@@ -61,9 +75,6 @@ export class OnboardingController {
     }
     if (headers.authorization.split(' ')[0] != 'Bearer') {
       throw new HttpException('Wrong method', HttpStatus.NOT_ACCEPTABLE);
-    }
-    if (!audio) {
-      throw new HttpException('Audio is necessary', HttpStatus.BAD_REQUEST);
     }
     const token = headers.authorization.split(' ')[1];
 
