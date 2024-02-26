@@ -9,15 +9,25 @@ import { User } from 'src/users/user.entity';
 import { Repository } from 'typeorm';
 import * as jwt from 'jsonwebtoken';
 import { UploadService } from 'src/files/upload.service';
+import { ConfigService } from '@nestjs/config';
+import * as CryptoJS from 'crypto-js';
 
 @Injectable()
 export class OnboardingService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
+    @Inject(ConfigService) private configService: ConfigService,
     @Inject(UploadService)
     private uploadService: UploadService,
   ) {}
   private readonly JWT_SECRET = process.env.JWT_SECRET;
+
+  private encrypt(message: string): string {
+    return CryptoJS.AES.encrypt(
+      message,
+      this.configService.getOrThrow('ENCRYPTION_KEY'),
+    ).toString();
+  }
 
   async stepOne(onboardingStepOne: OnboardingStepOne, token: string) {
     let decodedToken: { [x: string]: any; id?: any };
@@ -31,12 +41,13 @@ export class OnboardingService {
     let user = await this.userRepository.findOne({
       where: { id: decodedToken.id },
     });
+
     if (user) {
       user = {
         ...user,
-        fullName: onboardingStepOne.fullName,
-        birthDate: onboardingStepOne.birthDate,
-        country: onboardingStepOne.country,
+        fullName: this.encrypt(onboardingStepOne.fullName),
+        birthDate: this.encrypt(onboardingStepOne.birthDate),
+        country: this.encrypt(onboardingStepOne.country),
       };
       await this.userRepository.save(user);
       return 'The account was modified correctly';
@@ -125,7 +136,6 @@ export class OnboardingService {
     });
 
     if (!user.fullName && !user.birthDate && !user.country) {
-      console.log(user.hobbiesAndPreferences);
       return {
         status: 'PENDING',
         step: 1,
