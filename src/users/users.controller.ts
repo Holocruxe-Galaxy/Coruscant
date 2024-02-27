@@ -36,12 +36,24 @@ export class UsersController {
       .send(newUser['userDb']);
   }
   @Post('login')
-  async logIn(@Res() res: Response, @Body() user: SigInUserDto) {
+  async logIn(
+    @Res() res: Response,
+    @Body() user: SigInUserDto,
+    @Headers() headers: any,
+  ) {
     const errors = await validate(plainToClass(SigInUserDto, user));
+    if (!headers.authorization) {
+      throw new HttpException('Token needed', HttpStatus.BAD_REQUEST);
+    }
+    if (headers.authorization.split(' ')[0] != 'Bearer') {
+      throw new HttpException('Wrong method', HttpStatus.NOT_ACCEPTABLE);
+    }
+    const token = headers.authorization.split(' ')[1];
+
     if (errors.length > 0) {
       return res.status(HttpStatus.BAD_REQUEST).send(errors);
     }
-    const signIn = await this.userService.logIn(user);
+    const signIn = await this.userService.logIn(user, token);
     if (signIn['status'] === 404) {
       return res.status(HttpStatus.NOT_FOUND).send(signIn);
     }
@@ -51,7 +63,7 @@ export class UsersController {
     return res
       .status(HttpStatus.ACCEPTED)
       .header({ Authorization: signIn['token'] })
-      .send(signIn['alreadySigin']);
+      .send(signIn['fullUser']);
   }
   @Get('verify')
   async verify(@Res() res: Response, @Headers() headers: any) {

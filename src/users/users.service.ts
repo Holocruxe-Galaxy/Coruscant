@@ -21,6 +21,7 @@ export class UsersService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   private readonly JWT_SECRET = process.env.JWT_SECRET;
+  private readonly AUTH0_SECRET = process.env.AUTH0_SECRET;
 
   private encrypt(message: string): string {
     return CryptoJS.AES.encrypt(
@@ -60,28 +61,47 @@ export class UsersService {
     return { userDb, token };
   }
 
-  async logIn(user: SigInUserDto) {
-    const already = await this.userRepository.findOne({
-      where: { email: user.email },
-    });
-    if (!already) {
-      return new HttpException(
-        'the account you are trying to access does not exist, please register',
-        HttpStatus.NOT_FOUND,
-      );
+  async logIn(user: SigInUserDto, signing: string) {
+    try {
+      let decodedToken = jwt.verify(signing, this.AUTH0_SECRET) as {
+        [key: string]: any;
+      };
+      if (user.email === decodedToken.email) {
+        const fullUser = await this.userRepository.findOne({
+          where: { email: user.email },
+          select: {
+            id: true,
+          },
+        });
+        if (!fullUser) {
+          return new HttpException(
+            'the account you are trying to access does not exist, please register',
+            HttpStatus.NOT_FOUND,
+          );
+        }
+        if (fullUser.ban) {
+          return new HttpException(
+            'access prohibited, user banned',
+            HttpStatus.FORBIDDEN,
+          );
+        }
+
+        await this.userRepository.save({
+          ...fullUser,
+          last_connection: new Date(),
+        });
+
+        const token = jwt.sign({ id: fullUser.id }, this.JWT_SECRET, {
+          expiresIn: '24h',
+        });
+
+        return { fullUser, token };
+      } else {
+        throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+      }
+    } catch (error) {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
     }
-    if (already.ban) {
-      return new HttpException(
-        'access prohibited, user banned',
-        HttpStatus.FORBIDDEN,
-      );
-    }
-    const alreadySigin = { ...already, last_connection: new Date() };
-    await this.userRepository.save(alreadySigin);
-    const token = jwt.sign({ id: alreadySigin.id }, this.JWT_SECRET, {
-      expiresIn: '24h',
-    });
-    return { alreadySigin, token };
   }
 
   async verify(token: string) {
