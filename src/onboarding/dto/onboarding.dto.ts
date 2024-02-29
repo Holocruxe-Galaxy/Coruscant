@@ -18,6 +18,10 @@ export class OnboardingStepOne {
   @IsString()
   @IsNotEmpty()
   country: string;
+
+  @IsString()
+  @IsNotEmpty()
+  gender: string;
 }
 
 export class OnboardingStepTwo {

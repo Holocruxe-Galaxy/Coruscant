@@ -50,9 +50,7 @@ export class UsersService {
     }
     const newUser = this.userRepository.create({
       ...user,
-      name: this.encrypt(user.name),
       username: this.encrypt(user.username),
-      lastname: this.encrypt(user.lastname),
     });
     const userDb = await this.userRepository.save(newUser);
     const token = jwt.sign({ id: userDb.id }, this.JWT_SECRET, {

@@ -48,6 +48,7 @@ export class OnboardingService {
         fullName: this.encrypt(onboardingStepOne.fullName),
         birthDate: this.encrypt(onboardingStepOne.birthDate),
         country: this.encrypt(onboardingStepOne.country),
+        gender: this.encrypt(onboardingStepOne.gender),
       };
       await this.userRepository.save(user);
       return 'The account was modified correctly';
@@ -101,7 +102,7 @@ export class OnboardingService {
     if (!audio) {
       user = {
         ...user,
-        voiceLegacy: 'omitted',
+        voiceLegacyName: 'omitted',
       };
       await this.userRepository.save(user);
       return 'The account was modified correctly';
@@ -110,7 +111,7 @@ export class OnboardingService {
       const imageName = await this.uploadService.uploadManager(audio, user.id);
       user = {
         ...user,
-        voiceLegacy: imageName,
+        voiceLegacyName: imageName,
       };
       await this.userRepository.save(user);
       return 'The account was modified correctly';
@@ -135,45 +136,53 @@ export class OnboardingService {
       where: { id: decodedToken.id },
     });
 
-    if (!user.fullName && !user.birthDate && !user.country) {
+    if (!user.fullName && !user.birthDate && !user.country && !user.gender) {
       return {
         status: 'PENDING',
         step: 1,
       };
     }
-    if (
-      user.fullName &&
-      user.birthDate &&
-      user.country &&
-      !user.hobbiesAndPreferences
-    ) {
-      return {
-        status: 'PENDING',
-        step: 2,
-      };
-    }
-    if (
-      user.fullName &&
-      user.birthDate &&
-      user.country &&
-      user.hobbiesAndPreferences &&
-      !user.voiceLegacy
-    ) {
-      return {
-        status: 'PENDING',
-        step: 3,
-      };
-    }
-    if (
-      user.fullName &&
-      user.birthDate &&
-      user.country &&
-      user.hobbiesAndPreferences &&
-      user.voiceLegacy
-    ) {
+    if (user.fullName && user.birthDate && user.country && user.gender) {
       return {
         status: 'COMPLETE',
       };
     }
+    // if (
+    //   user.fullName &&
+    //   user.birthDate &&
+    //   user.country &&
+    //   user.gender &&
+    //   !user.hobbiesAndPreferences
+    // ) {
+    //   return {
+    //     status: 'PENDING',
+    //     step: 2,
+    //   };
+    // }
+    // if (
+    //   user.fullName &&
+    //   user.birthDate &&
+    //   user.country &&
+    //   user.gender &&
+    //   user.hobbiesAndPreferences &&
+    //   !user.voiceLegacyName
+    // ) {
+    //   return {
+    //     status: 'PENDING',
+    //     step: 3,
+    //   };
+    // }
+    // if (
+    //   user.fullName &&
+    //   user.birthDate &&
+    //   user.country &&
+    //   user.gender &&
+    //   user.hobbiesAndPreferences &&
+    //   user.voiceLegacyName
+    // ) {
+    //   return {
+    //     status: 'COMPLETE',
+    //   };
+    // }
   }
 }

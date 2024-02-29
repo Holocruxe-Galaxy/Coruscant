@@ -14,12 +14,6 @@ export class User {
   @Column({ nullable: false })
   username: string;
 
-  @Column({ nullable: false })
-  name: string;
-
-  @Column({ nullable: false })
-  lastname: string;
-
   @Column({
     nullable: true,
   })
@@ -64,9 +58,12 @@ export class User {
   @Column({ nullable: true })
   country: string;
 
+  @Column({ nullable: true })
+  gender: string;
+
   @Column('text', { array: true, nullable: true })
   hobbiesAndPreferences: string[];
 
   @Column({ nullable: true })
-  voiceLegacy: string;
+  voiceLegacyName: string;
 }
