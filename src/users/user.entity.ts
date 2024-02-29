@@ -58,6 +58,9 @@ export class User {
   @Column({ nullable: true })
   country: string;
 
+  @Column({ nullable: true })
+  gender: string;
+
   @Column('text', { array: true, nullable: true })
   hobbiesAndPreferences: string[];
 

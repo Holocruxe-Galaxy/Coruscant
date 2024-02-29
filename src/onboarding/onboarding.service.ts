@@ -48,6 +48,7 @@ export class OnboardingService {
         fullName: this.encrypt(onboardingStepOne.fullName),
         birthDate: this.encrypt(onboardingStepOne.birthDate),
         country: this.encrypt(onboardingStepOne.country),
+        gender: this.encrypt(onboardingStepOne.gender),
       };
       await this.userRepository.save(user);
       return 'The account was modified correctly';
@@ -145,6 +146,7 @@ export class OnboardingService {
       user.fullName &&
       user.birthDate &&
       user.country &&
+      user.gender &&
       !user.hobbiesAndPreferences
     ) {
       return {
@@ -156,6 +158,7 @@ export class OnboardingService {
       user.fullName &&
       user.birthDate &&
       user.country &&
+      user.gender &&
       user.hobbiesAndPreferences &&
       !user.voiceLegacyName
     ) {
@@ -168,6 +171,7 @@ export class OnboardingService {
       user.fullName &&
       user.birthDate &&
       user.country &&
+      user.gender &&
       user.hobbiesAndPreferences &&
       user.voiceLegacyName
     ) {
