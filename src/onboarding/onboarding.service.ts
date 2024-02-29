@@ -136,48 +136,53 @@ export class OnboardingService {
       where: { id: decodedToken.id },
     });
 
-    if (!user.fullName && !user.birthDate && !user.country) {
+    if (!user.fullName && !user.birthDate && !user.country && !user.gender) {
       return {
         status: 'PENDING',
         step: 1,
       };
     }
-    if (
-      user.fullName &&
-      user.birthDate &&
-      user.country &&
-      user.gender &&
-      !user.hobbiesAndPreferences
-    ) {
-      return {
-        status: 'PENDING',
-        step: 2,
-      };
-    }
-    if (
-      user.fullName &&
-      user.birthDate &&
-      user.country &&
-      user.gender &&
-      user.hobbiesAndPreferences &&
-      !user.voiceLegacyName
-    ) {
-      return {
-        status: 'PENDING',
-        step: 3,
-      };
-    }
-    if (
-      user.fullName &&
-      user.birthDate &&
-      user.country &&
-      user.gender &&
-      user.hobbiesAndPreferences &&
-      user.voiceLegacyName
-    ) {
+    if (user.fullName && user.birthDate && user.country && user.gender) {
       return {
         status: 'COMPLETE',
       };
     }
+    // if (
+    //   user.fullName &&
+    //   user.birthDate &&
+    //   user.country &&
+    //   user.gender &&
+    //   !user.hobbiesAndPreferences
+    // ) {
+    //   return {
+    //     status: 'PENDING',
+    //     step: 2,
+    //   };
+    // }
+    // if (
+    //   user.fullName &&
+    //   user.birthDate &&
+    //   user.country &&
+    //   user.gender &&
+    //   user.hobbiesAndPreferences &&
+    //   !user.voiceLegacyName
+    // ) {
+    //   return {
+    //     status: 'PENDING',
+    //     step: 3,
+    //   };
+    // }
+    // if (
+    //   user.fullName &&
+    //   user.birthDate &&
+    //   user.country &&
+    //   user.gender &&
+    //   user.hobbiesAndPreferences &&
+    //   user.voiceLegacyName
+    // ) {
+    //   return {
+    //     status: 'COMPLETE',
+    //   };
+    // }
   }
 }
