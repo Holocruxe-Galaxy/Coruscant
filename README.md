@@ -12,4 +12,3 @@ Este es el microservicio de autenticacion y registro de usuarios nuevos. Este mi
 >- Lenguaje: __Typescript__
 >- Framework: __Nest.js__
 >- Database: __PostgreSQL__
-
