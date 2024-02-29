@@ -101,7 +101,7 @@ export class OnboardingService {
     if (!audio) {
       user = {
         ...user,
-        voiceLegacy: 'omitted',
+        voiceLegacyName: 'omitted',
       };
       await this.userRepository.save(user);
       return 'The account was modified correctly';
@@ -110,7 +110,7 @@ export class OnboardingService {
       const imageName = await this.uploadService.uploadManager(audio, user.id);
       user = {
         ...user,
-        voiceLegacy: imageName,
+        voiceLegacyName: imageName,
       };
       await this.userRepository.save(user);
       return 'The account was modified correctly';
@@ -157,7 +157,7 @@ export class OnboardingService {
       user.birthDate &&
       user.country &&
       user.hobbiesAndPreferences &&
-      !user.voiceLegacy
+      !user.voiceLegacyName
     ) {
       return {
         status: 'PENDING',
@@ -169,7 +169,7 @@ export class OnboardingService {
       user.birthDate &&
       user.country &&
       user.hobbiesAndPreferences &&
-      user.voiceLegacy
+      user.voiceLegacyName
     ) {
       return {
         status: 'COMPLETE',
