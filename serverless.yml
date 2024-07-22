@@ -1,0 +1,23 @@
+service: chatbot-cruxy
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+
+
+functions:
+  chatbot:
+    handler: handler.chatbot
+    timeout: 30
+    # events:
+    #   - http:
+    #       path: /
+    #       method: post
+    url:
+      cors:  true
+    role: arn:aws:iam::891377228861:role/claude3-haiku-role
+
+plugins:
+  - serverless-offline    
